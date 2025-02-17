@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instant Gig Marketplace</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    .gig { border: 1px solid #ddd; padding: 10px; margin: 10px; display: inline-block; }
+    button { background: green; color: white; padding: 10px; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Instant Gig Marketplace</h1>
+  <div id="gigs"></div>
+  <script>
+    async function fetchGigs() {
+      // Loads gigs dynamically from your backend (or static file on GitHub Pages if hosted together)
+      const response = await fetch('backend/gigs.json');
+      const gigs = await response.json();
+      renderGigs(gigs);
+    }
+    
+    function renderGigs(gigs) {
+      const gigsContainer = document.getElementById('gigs');
+      gigs.forEach(gig => {
+        const gigElement = document.createElement('div');
+        gigElement.classList.add('gig');
+        gigElement.innerHTML = `
+          <h3>${gig.title}</h3>
+          <p>Price: $${gig.price}</p>
+          <a href="${gig.link}" target="_blank"><button>Buy Now</button></a>
+          <br>
+          <button onclick="orderService('${gig.title}')">Order Now (Fulfillment Demo)</button>
+        `;
+        gigsContainer.appendChild(gigElement);
+      });
+    }
+
+    // This function simulates sending an order to the backend for AI-powered fulfillment.
+    async function orderService(gigType) {
+      const orderData = {
+        gig_type: gigType,
+        prompt: `Generate a high-quality ${gigType} service output.`
+      };
+
+      try {
+        const res = await fetch('http://YOUR_BACKEND_URL/fulfill_order', {  // Replace with your backend URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        const result = await res.json();
+        alert(result.status === 'success' ? `Service Output:\n${result.output}` : `Error: ${result.error}`);
+      } catch (error) {
+        alert('Error processing your order.');
+      }
+    }
+    
+    fetchGigs();
+  </script>
+</body>
+</html>
