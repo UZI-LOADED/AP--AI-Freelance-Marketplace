@@ -1,0 +1,7 @@
+/Freelance-Marketplace
+│── index.html          # Front‑end HTML site
+│
+└── backend/            
+    ├── gigs.json       # Static gig listings (used by front‑end)
+    ├── server.py       # Flask backend with AI‑powered order fulfillment
+    └── requirements.txt# Dependencies for the backend
